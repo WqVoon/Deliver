@@ -8,10 +8,13 @@ from json import loads
 from uuid import uuid3, NAMESPACE_DNS
 from model import User
 from utils import validate_user, code_to_session
+from cachetools import TTLCache
+from config import USER_MAX_SIZE, USER_SESSION_TTL
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 login_manager = LoginManager()
-users = {}
+users = TTLCache(maxsize=USER_MAX_SIZE, ttl=USER_SESSION_TTL)
+
 
 class CustomSessionInterface(SecureCookieSessionInterface):
 	""" 避免生成 cookie，用来配合 request.loader 实现自定义登录态 """
@@ -54,8 +57,8 @@ def index():
 	)
 
 	ret = code_to_session(code, appid, secret)
-	session_key = ret['session_key']
-	open_id = ret['openid']
+	session_key, open_id = ret['session_key'], ret['openid']
+
 	if validate_user(raw_data, session_key, signature):
 		uuid = uuid3(NAMESPACE_DNS, current_app.secret_key+open_id).hex
 		info = loads(raw_data)
