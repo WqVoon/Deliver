@@ -19,4 +19,12 @@ def create_app():
 	from test import test_bp
 	app.register_blueprint(test_bp)
 
+	# 注册登录蓝图，url前缀 /auth
+	from auth import (
+		auth_bp, CustomSessionInterface, login_manager
+	)
+	login_manager.init_app(app)
+	app.session_interface = CustomSessionInterface()
+	app.register_blueprint(auth_bp)
+
 	return app
