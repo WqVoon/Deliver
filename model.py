@@ -10,14 +10,20 @@ class User(UserMixin, db.Model):
 	tele = db.Column(db.String(11))
 
 	def __repr__(self):
-	 return f"<User name={self.name} tele={self.tele}>"
+		""" 用来以字符串形式显示用户信息 """
+		return (
+			f"<User name={self.name} tele={self.tele} "+
+			f"addr={','.join(map(lambda a:a.location ,self.addresses)) or 'None'}>")
 
 
 class Address(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
+	id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	location = db.Column(db.Text, nullable=False)
 	user_id = db.Column(db.String(32), db.ForeignKey("user.id"), nullable=False)
 	user = db.relationship("User", backref=db.backref("addresses", lazy=True))
+
+	def __repr__(self):
+		return f"<Address f{self.location}>"
 
 
 class OrderInfo(db.Model):
