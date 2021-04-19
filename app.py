@@ -7,6 +7,11 @@ def create_app():
 	from config import app_config
 	app.config.from_mapping(app_config)
 
+	# 注册 Model 及其对应的 shell_context
+	from model import db, register_db_shell_context
+	db.init_app(app)
+	register_db_shell_context(app)
+
 	# 注册 CLI 命令
 	from cli import custom_cli
 	app.cli.add_command(custom_cli)

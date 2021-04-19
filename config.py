@@ -1,6 +1,8 @@
 # 用来初始化 app 实例的配置
 app_config = {
 	"SECRET_KEY": "IloveLym",
+	"SQLALCHEMY_TRACK_MODIFICATIONS": False,
+	"SQLALCHEMY_DATABASE_URI": "sqlite:///database.db"
 }
 
 # 最大在线用户数量

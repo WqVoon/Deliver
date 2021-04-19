@@ -3,6 +3,7 @@ from click import command
 
 custom_cli = AppGroup("cli")
 
+
 def cli(*args, **kwargs):
 	"""
 		自定义装饰器，用来简化下面命令的包装
@@ -12,6 +13,7 @@ def cli(*args, **kwargs):
 		return custom_cli.command(
 			*args, **kwargs)(with_appcontext(f))
 	return decorator
+
 
 @cli("test")
 def test_cli():

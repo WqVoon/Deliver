@@ -17,12 +17,13 @@ def test_login():
 	id = request.args.get("id")
 	if id:
 		uuid = uuid3(NAMESPACE_DNS, id).hex
-		u = User(id, "Test")
+		u = User(id=id, name="Test")
 		users[uuid] = u
 		login_user(u)
 		return f"Login OK, uuid: {uuid}"
 	else:
 		return "Login Err"
+
 
 @test_bp.route("/logout", methods=["GET"])
 @login_required
@@ -31,6 +32,7 @@ def test_logout():
 	uuid = request.args.get("uuid")
 	users.pop(uuid)
 	return "Logout OK"
+
 
 @test_bp.route("/loginTest")
 @login_required
