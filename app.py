@@ -6,6 +6,10 @@ def create_app():
 	# 注册配置信息
 	from config import app_config
 	app.config.from_mapping(app_config)
+
+	# 注册 CLI 命令
+	from cli import custom_cli
+	app.cli.add_command(custom_cli)
 	
 	# 注册错误码处理函数
 	from code_handlers import (
