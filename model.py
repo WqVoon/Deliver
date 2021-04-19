@@ -9,6 +9,9 @@ class User(UserMixin, db.Model):
 	name = db.Column(db.String(16))
 	tele = db.Column(db.String(11))
 
+	def __repr__(self):
+	 return f"<User name={self.name} tele={self.tele}>"
+
 
 class Address(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
