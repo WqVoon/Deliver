@@ -20,7 +20,7 @@ class Address(db.Model):
 	id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	location = db.Column(db.Text, nullable=False)
 	user_id = db.Column(db.String(32), db.ForeignKey("user.id"), nullable=False)
-	user = db.relationship("User", backref=db.backref("addresses", lazy=True))
+	user = db.relationship("User", backref=db.backref("addresses", lazy=False))
 
 	def __repr__(self):
 		return f"<Address f{self.location}>"

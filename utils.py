@@ -1,5 +1,25 @@
 from requests import get
 from hashlib import sha1
+from model import User, db
+from werkzeug.exceptions import NotFound
+
+
+def get_user(uid, name="Test"):
+	"""
+		如果 uid 对应的用户已经存在于数据库，则返回之
+		否则根据 uid 新建一个用户对象，并加入到 user 表中
+	"""
+	try:
+		user = User.query.get_or_404(uid)
+		print("从数据库获取了用户")
+	except NotFound:
+		user = User(id=uid, name=name)
+		db.session.add(user)
+		db.session.commit()
+		print("新建了用户")
+
+	return user
+
 
 
 def validate_user(raw_data, session_key, signature):

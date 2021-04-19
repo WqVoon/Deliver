@@ -3,6 +3,7 @@ from flask_login import login_user, current_user, login_required
 from uuid import uuid3, NAMESPACE_DNS
 from model import User
 from auth import users
+from utils import get_user
 
 test_bp = Blueprint("test", __name__, url_prefix="/test")
 
@@ -17,7 +18,7 @@ def test_login():
 	id = request.args.get("id")
 	if id:
 		uuid = uuid3(NAMESPACE_DNS, id).hex
-		u = User(id=id, name="Test")
+		u = get_user(id)
 		users[uuid] = u
 		login_user(u)
 		return f"Login OK, uuid: {uuid}"
@@ -38,4 +39,5 @@ def test_logout():
 @login_required
 def test_users():
 	""" 用来判断用户是否登录成功，成功返回字符串，否则返回 405 """
-	return f"Hello, {current_user.name}"
+	return f"Hello, {current_user}", 200, {
+		"Content-Type": "text/plain;charset=utf-8"}

@@ -7,7 +7,7 @@ from flask.sessions import SecureCookieSessionInterface
 from json import loads
 from uuid import uuid3, NAMESPACE_DNS
 from model import User
-from utils import validate_user, code_to_session
+from utils import validate_user, code_to_session, get_user
 from cachetools import TTLCache
 from config import USER_MAX_SIZE, USER_SESSION_TTL
 
@@ -62,10 +62,14 @@ def index():
 	if validate_user(raw_data, session_key, signature):
 		uuid = uuid3(NAMESPACE_DNS, current_app.secret_key+open_id).hex
 		info = loads(raw_data)
-		tmp_user = User(open_id, info["nickName"])
+		tmp_user = get_user(open_id)
 		users[uuid] = tmp_user
 		login_user(tmp_user)
-		return uuid
+		return {
+			"uuid": uuid,
+			"tele": tmp_user.tele,
+			"addr": [addr.location for addr in tmp_user.addresses]
+		}
 	else:
 		return "Err"
 

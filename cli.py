@@ -54,7 +54,7 @@ def add_user():
 @option("--name")
 def query_user(id, name):
 	""" 根据提供的参数来查询 User 表中的记录 """
-	for u in query_user_by_args(id, name):
+	for u in query_user_by_args(id, name).all():
 		print(u)
 	print("Done")
 
@@ -80,8 +80,8 @@ def add_address(id, name):
 		print("Must provide query arg")
 		return None
 	try:
-		u = query_user_by_args(id, name)[0]
-	except IndexError:
+		u = query_user_by_args(id, name).first_or_404()
+	except Exception as e:
 		print("No such user")
 		return None
 
@@ -93,8 +93,8 @@ def add_address(id, name):
 def query_user_by_args(id, name):
 	""" 辅助函数 """
 	if id is not None:
-		return User.query.filter_by(id=id).all()
+		return User.query.filter_by(id=id)
 	elif name is not None:
-		return User.query.filter_by(name=name).all()
+		return User.query.filter_by(name=name)
 	else:
-		return User.query.all()
+		return User.query
