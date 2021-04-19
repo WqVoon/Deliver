@@ -1,7 +1,6 @@
 from flask.cli import with_appcontext, AppGroup
 from click import command, option
 from model import db, User, Address
-from uuid import uuid1
 
 custom_cli = AppGroup("cli")
 
@@ -41,7 +40,7 @@ def drop_db():
 def add_user():
 	""" 向 User 表中加入一条内容 """
 	tmp_user = User(
-		id="TEST-" + uuid1().hex[5:],
+		id=input("ID: "),
 		name=input("Name: "),
 		tele=input("Tele: ")
 	)
@@ -51,24 +50,21 @@ def add_user():
 
 
 @cli()
+@option("--id")
 @option("--name")
-def query_user(name):
-	""" 根据用户名来查询 User 表中的记录 """
-	if name is None:
-		results = User.query.all()
-	else:
-		results = User.query.filter_by(name=name).all()
-
-	for u in results:
+def query_user(id, name):
+	""" 根据提供的参数来查询 User 表中的记录 """
+	for u in query_user_by_args(id, name):
 		print(u)
 	print("Done")
 
 
 @cli()
-@option("--name", required=True)
-def update_user(name):
-	""" 根据用户名来更新 User 表中的手机号 """
-	User.query.filter_by(name=name).update({
+@option("--id")
+@option("--name")
+def update_user(id, name):
+	""" 根据提供的参数来更新 User 表中的手机号 """
+	query_user_by_args(id, name).update({
 		"tele": input("New Tele: ")
 	})
 	db.session.commit()
@@ -76,14 +72,29 @@ def update_user(name):
 
 
 @cli()
-@option("--name", required=True)
-def add_address(name):
+@option("--id")
+@option("--name")
+def add_address(id, name):
 	""" 向 Address 中加入一条与某 user 相关的记录 """
-	u = User.query.filter_by(name=name).first()
-	if u is None:
+	if id is None and name is None:
+		print("Must provide query arg")
+		return None
+	try:
+		u = query_user_by_args(id, name)[0]
+	except IndexError:
 		print("No such user")
 		return None
 
 	u.addresses.append(Address(location=input("Location: ")))
 	db.session.commit()
 	print("Done")
+
+
+def query_user_by_args(id, name):
+	""" 辅助函数 """
+	if id is not None:
+		return User.query.filter_by(id=id).all()
+	elif name is not None:
+		return User.query.filter_by(name=name).all()
+	else:
+		return User.query.all()
