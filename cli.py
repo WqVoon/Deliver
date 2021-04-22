@@ -1,6 +1,6 @@
 from flask.cli import with_appcontext, AppGroup
 from click import command, option
-from model import db, User, Address
+from .model import db, User, Address
 
 custom_cli = AppGroup("cli")
 

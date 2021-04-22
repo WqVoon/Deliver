@@ -1,6 +1,6 @@
 from requests import get
 from hashlib import sha1
-from model import User, db
+from .model import User, db
 from werkzeug.exceptions import NotFound
 
 

@@ -1,9 +1,9 @@
 from flask import Blueprint, request
 from flask_login import login_user, current_user, login_required
 from uuid import uuid3, NAMESPACE_DNS
-from model import User
-from auth import users
-from utils import get_user
+from ..model import User
+from .auth import users
+from ..utils import get_user
 
 test_bp = Blueprint("test", __name__, url_prefix="/test")
 

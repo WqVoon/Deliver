@@ -1,6 +1,6 @@
 from flask import request, abort
 from cachetools import TTLCache
-from config import LIMIT_TTL, LIMIT_COUNT, USER_MAX_SIZE
+from .config import LIMIT_TTL, LIMIT_COUNT, USER_MAX_SIZE
 
 def register_hooks(app):
 	""" 注册所有的钩子函数 """

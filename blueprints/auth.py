@@ -6,10 +6,10 @@ from flask import Blueprint, request, abort, current_app
 from flask.sessions import SecureCookieSessionInterface
 from json import loads
 from uuid import uuid3, NAMESPACE_DNS
-from model import User
-from utils import validate_user, code_to_session, get_user
+from ..model import User
+from ..utils import validate_user, code_to_session, get_user
 from cachetools import TTLCache
-from config import USER_MAX_SIZE, USER_SESSION_TTL
+from ..config import USER_MAX_SIZE, USER_SESSION_TTL
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 login_manager = LoginManager()
