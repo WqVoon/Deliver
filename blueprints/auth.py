@@ -33,6 +33,8 @@ def load_user_from_request(r):
 	if r.method == "GET":
 		uuid = r.args.get("uuid")
 	else:
+		if r.json is None:
+			return None
 		uuid = r.json.get("uuid")
 	return users.get(uuid)
 
@@ -68,7 +70,10 @@ def index():
 		return {
 			"uuid": uuid,
 			"tele": tmp_user.tele,
-			"addr": [addr.location for addr in tmp_user.addresses]
+			"addr": [
+				{"key": addr.id, "location": addr.location}
+				for addr in tmp_user.addresses
+			]
 		}
 	else:
 		return "Err"

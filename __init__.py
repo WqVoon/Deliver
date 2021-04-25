@@ -40,4 +40,8 @@ def create_app():
 	app.session_interface = CustomSessionInterface()
 	app.register_blueprint(auth_bp)
 
+	# 注册我的蓝图，url前缀 /me
+	from .blueprints.me import me_bp
+	app.register_blueprint(me_bp)
+
 	return app

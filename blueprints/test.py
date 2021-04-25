@@ -18,10 +18,17 @@ def test_login():
 	id = request.args.get("id")
 	if id:
 		uuid = uuid3(NAMESPACE_DNS, id).hex
-		u = get_user(id)
-		users[uuid] = u
-		login_user(u)
-		return f"Login OK, uuid: {uuid}"
+		tmp_user = get_user(id)
+		users[uuid] = tmp_user
+		login_user(tmp_user)
+		return {
+			"uuid": uuid,
+			"tele": tmp_user.tele,
+			"addr": [
+				{"key": addr.id, "location": addr.location}
+				for addr in tmp_user.addresses
+			]
+		}
 	else:
 		return "Login Err"
 
