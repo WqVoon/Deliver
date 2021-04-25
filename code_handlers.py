@@ -1,6 +1,8 @@
 def handle_401(e):
 	return "Who are u?", 401
 
+def handle_403(e):
+	return "forbidden", 403
 
 def handle_404(e):
 	return "No such page", 404

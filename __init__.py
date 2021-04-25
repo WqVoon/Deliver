@@ -22,9 +22,10 @@ def create_app():
 	
 	# 注册错误码处理函数
 	from .code_handlers import (
-		handle_401, handle_404, handle_500
+		handle_401, handle_403, handle_404, handle_500
 	)
 	app.register_error_handler(401, handle_401)
+	app.register_error_handler(403, handle_403)
 	app.register_error_handler(404, handle_404)
 	app.register_error_handler(500, handle_500)
 

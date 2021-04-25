@@ -35,7 +35,7 @@ def add_addr():
 		- 返回
 			{
 				"addrs": [
-					{"key": 数据库主键, "value": 地址文本},
+					{"key": 数据库主键, "location": 地址文本},
 					...
 				]
 			}
@@ -84,4 +84,39 @@ def delete_addr():
 		else:
 			db.session.delete(item)
 	db.session.commit()
+	return "OK"
+
+
+@me_bp.route("/addr/update", methods=["POST"])
+@login_required
+def update_addr():
+	"""
+	更新用户的地址信息
+		- 参数
+			{
+				"addrs": [
+					{"key": 数据库主键, "location": 地址文本},
+					...
+				]
+			}
+		- 返回
+			成功返回 OK
+	"""
+	addrs = request.json.get("addrs")
+	if addrs is None:
+		return "Please provide 'addrs' arg by json", 403
+
+	for addr in addrs:
+		try:
+			key, value = addr["key"], addr["location"]
+		except IndexError:
+			return "Please provide {'key':xxx, 'value':xxx} pattern", 403
+
+		addr = Address.query.get(key)
+		if addr is None or addr.user_id != current_user.id:
+			abort(403)
+
+		addr.location = value
+	db.session.commit()
+
 	return "OK"
