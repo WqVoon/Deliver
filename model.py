@@ -46,6 +46,8 @@ class BaseOrderInfo:
 	buyer_tele = db.Column(db.String(11))
 	# 表示接单人的电话
 	receiver_tele = db.Column(db.String(11))
+	# 表示备注信息
+	comments = db.Column(db.Text)
 
 
 class Pending(db.Model, BaseOrderInfo):
