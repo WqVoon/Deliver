@@ -49,4 +49,12 @@ def create_app():
 	from .blueprints.pending import pending_bp
 	app.register_blueprint(pending_bp)
 
+	# 注册活跃蓝图，url前缀 /active
+	from .blueprints.active import active_bp
+	app.register_blueprint(active_bp)
+
+	# 注册完成蓝图，url前缀 /finish
+	from .blueprints.finish import finish_bp
+	app.register_blueprint(finish_bp)
+
 	return app

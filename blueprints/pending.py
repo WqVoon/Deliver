@@ -7,4 +7,4 @@ pending_bp = Blueprint("pending", __name__, url_prefix="/pending")
 
 @pending_bp.route("/")
 def pending_index():
-	return "OK"
+	return "Hello, Pending!"
