@@ -76,7 +76,7 @@ def index():
 			]
 		}
 	else:
-		return "Err"
+		return "Err", 403
 
 
 @auth_bp.route("/logout", methods=["POST"])

@@ -30,7 +30,7 @@ def test_login():
 			]
 		}
 	else:
-		return "Login Err"
+		return "Login Err", 403
 
 
 @test_bp.route("/logout", methods=["GET"])
@@ -42,7 +42,7 @@ def test_logout():
 	return "Logout OK"
 
 
-@test_bp.route("/loginTest")
+@test_bp.route("/loginTest", methods=["GET", "POST"])
 @login_required
 def test_users():
 	""" 用来判断用户是否登录成功，成功返回字符串，否则返回 405 """
