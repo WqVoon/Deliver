@@ -23,6 +23,7 @@ def get_user(uid, name="Test"):
 
 
 def get_one_page_orders(query, page_id):
+	"""根据查询器获取指定页的内容，找不到则返回 404，否则返回字典列表"""
 	one_page = query.paginate(page_id, per_page=PER_PAGE).items
 	items = []
 	for data in one_page:

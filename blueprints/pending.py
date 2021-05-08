@@ -1,6 +1,6 @@
 from flask import Blueprint, request, abort
 from flask_login import current_user, login_required
-from ..model import Pending, db
+from ..model import Pending, Active, db
 from ..utils import get_one_page_orders
 
 
@@ -53,7 +53,7 @@ def pending_add():
 
 
 @pending_bp.route("/query/all/<int:page_id>")
-# @login_required
+@login_required
 def pending_query_all(page_id):
 	"""查询所有待接取的订单
 	在没有对应的页时返回 404
@@ -77,9 +77,45 @@ def pending_query_all(page_id):
 
 
 @pending_bp.route("/query/i-add/<int:page_id>")
-# @login_required
+@login_required
 def pending_query_i_add(page_id):
 	"""查询我下过的所有订单，返回值同 /pending/query/all"""
 	query = Pending.query.filter_by(buyer_id=current_user.id)
 	items = get_one_page_orders(query, page_id)
 	return { "items": items }
+
+
+@pending_bp.route("/fetch", methods=["POST"])
+@login_required
+def pending_fetch():
+	"""接取一个主键对应的订单"""
+	if current_user.tele is None:
+		return "Please fill in the phone number first", 403
+
+	try:
+		key = request.json["key"]
+	except KeyError:
+		return "Incomplete arg list", 403
+	
+	item = Pending.query.get_or_404(key)
+	if item.buyer_id == current_user.id:
+		return "Can not fetch this order", 403
+	
+	new_item = Active(
+		receiver_id     = current_user.id,
+		receiver_tele   = current_user.tele,
+		buyer_id        = item.buyer_id,
+		buyer_tele      = item.buyer_tele,
+		amount          = item.amount,
+		comments        = item.comments,
+		stuff_number    = item.stuff_number,
+		stuff_weight    = item.stuff_weight,
+		stuff_address   = item.stuff_address,
+		receive_address = item.receive_address,
+		timestamp       = item.timestamp,
+	)
+
+	db.session.delete(item)
+	db.session.add(new_item)
+	db.session.commit()
+	return "OK"
