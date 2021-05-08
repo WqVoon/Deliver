@@ -45,4 +45,8 @@ def create_app():
 	from .blueprints.me import me_bp
 	app.register_blueprint(me_bp)
 
+	# 注册等待蓝图，url前缀 /pending
+	from .blueprints.pending import pending_bp
+	app.register_blueprint(pending_bp)
+
 	return app
