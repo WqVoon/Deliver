@@ -2,6 +2,7 @@ from requests import get
 from hashlib import sha1
 from .model import User, db
 from werkzeug.exceptions import NotFound
+from .config import PER_PAGE
 
 
 def get_user(uid, name="Test"):
@@ -20,6 +21,24 @@ def get_user(uid, name="Test"):
 
 	return user
 
+
+def get_one_page_orders(query, page_id):
+	one_page = query.paginate(page_id, per_page=PER_PAGE).items
+	items = []
+	for data in one_page:
+		items.append(dict(
+			id = data.id,
+			stuff_number    = data.stuff_number,
+			stuff_weight    = data.stuff_weight,
+			stuff_address   = data.stuff_address,
+			receive_address = data.receive_address,
+			amount          = data.amount,
+			timestamp       = data.timestamp.strftime("%Y/%m/%d %H:%M:%S"),
+			buyer_tele      = data.buyer_tele,
+			receiver_tele   = data.receiver_tele,
+			comments        = data.comments,
+		))
+	return items
 
 
 def validate_user(raw_data, session_key, signature):
