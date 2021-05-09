@@ -20,7 +20,8 @@ def update_tele():
 	if new_tele is None:
 		return "Please provide 'tele' arg by json", 403
 
-	User.query.get(current_user.id).tele = new_tele
+	current_user.tele =\
+		User.query.get(current_user.id).tele = new_tele
 	db.session.commit()
 	return "OK"
 
